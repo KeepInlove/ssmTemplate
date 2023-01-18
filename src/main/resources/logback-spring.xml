@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="false" scanPeriod="60 seconds" debug="false">
+    <property name="PATH" value="./log" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date{yyyy/MM/dd HH:mm:ss.SSS} %level [%thread] (%file:%line\) - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <appender name="APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${PATH}/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${PATH}/app.%d{yyyyMMdd_HH}.log.zip</fileNamePattern><!-- 実機は tar.gz -->
+            <maxHistory>168</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{yyyy/MM/dd HH:mm:ss.SSS} %level [%thread] (%file:%line\) - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="OPE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${PATH}/ope.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${PATH}/ope.%d{yyyyMMdd_HH}.log.zip</fileNamePattern><!-- 実機は tar.gz -->
+            <maxHistory>168</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{yyyy/MM/dd HH:mm:ss.SSS} %level [%thread] (%file:%line\) - %msg%n</pattern>
+        </encoder>
+<!--        <filter class="jp.co.nexco.core.common.OperateLogFilter"></filter>-->
+    </appender>
+    <appender name="ERR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${PATH}/err.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${PATH}/err.%d{yyyyMMdd_HH}.log.zip</fileNamePattern><!-- 実機は tar.gz -->
+            <maxHistory>168</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{yyyy/MM/dd HH:mm:ss.SSS} %level [%thread] (%file:%line\) - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <logger name="org.mybatis.spring">
+        <level value="ERROR"/>
+        <appender-ref ref="APP"/>
+    </logger>
+    <logger name="org.springframework">
+        <level value="ERROR"/>
+        <appender-ref ref="APP"/>
+    </logger>
+    <logger name="org.apache">
+        <level value="ERROR"/>
+        <appender-ref ref="APP"/>
+    </logger>
+    <logger name="org.thymeleaf">
+        <level value="ERROR"/>
+        <appender-ref ref="APP"/>
+    </logger>
+    <logger name="org.springframework.web.servlet" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="APP"/>
+    </logger>
+
+    <root level="DEBUG">
+        <appender-ref ref="APP" />
+        <appender-ref ref="ERR" />
+        <appender-ref ref="OPE" />
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
